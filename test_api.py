@@ -3,19 +3,38 @@ import pytest
 BASE_URL = "https://jsonplaceholder.typicode.com"
 
 
-def test_status_code():
-    response = requests.get(f"{BASE_URL}/users/1")
-    assert response.status_code == 200
+
+@pytest.fixture
+def user1_response():
+    return requests.get(f"{BASE_URL}/users/1")
+    
 
 
-def test_user_name():
-    response = requests.get(f"{BASE_URL}/users/1")
-    assert response.json()["name"] == "Leanne Graham"
+def test_status_code(user1_response):
+    assert user1_response.status_code==200
+
+def test_user_name(user1_response):
+    assert user1_response.json()["name"]== "Leanne Graham"
+
+def test_user_city(user1_response):
+    assert user1_response.json()["address"]["city"] == "Gwenborough"
+    
 
 
-def test_user_city():
-    response = requests.get(f"{BASE_URL}/users/1")
-    assert response.json()["address"]["city"] == "Gwenborough"
+
+# def test_status_code():
+#     response = requests.get(f"{BASE_URL}/users/1")
+#     assert response.status_code == 200
+
+
+# def test_user_name():
+#     response = requests.get(f"{BASE_URL}/users/1")
+#     assert response.json()["name"] == "Leanne Graham"
+
+
+# def test_user_city():
+#     response = requests.get(f"{BASE_URL}/users/1")
+#     assert response.json()["address"]["city"] == "Gwenborough"
 
 
 @pytest.mark.parametrize("user_id, expected_status",[
@@ -27,3 +46,7 @@ def test_user_city():
 def test_user_status(user_id, expected_status):
     response=requests.get(f"{BASE_URL}/users/{user_id}")
     assert response.status_code==expected_status
+
+
+
+    
